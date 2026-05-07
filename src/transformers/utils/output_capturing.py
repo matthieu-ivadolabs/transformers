@@ -214,6 +214,10 @@ def capture_outputs(func=None, *, tie_last_hidden_states=True):
     """
 
     def wrapped_fn(func):
+        # If we are using torch.compile, explicitly import torch
+        if _active_collector.compiling:
+            import torch
+
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             # Pop it so that internal modules always return a dict even if False is requested
